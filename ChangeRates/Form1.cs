@@ -9,13 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ChangeRates
 {
 
-    public partial class Form1 : Form
+    public partial class Form1 : MaterialForm
     {
         public Form1()
         {
@@ -32,12 +34,24 @@ namespace ChangeRates
             string fullInfoJson = new WebClient().DownloadString(fullInfo);
             dynamic stuff = JObject.Parse(fullInfoJson);
             int maxMoney = stuff.data.Count;
-            while (idNumbers < maxMoney)
+            try
             {
-                Console.WriteLine(stuff.data[idNumbers].id);
-                idNumbers++;
-            } 
+                File.Delete("id.txt");
+            }
+            catch
+            {
+
+            }
             
+            StreamWriter sw = new StreamWriter("id.txt");
+            while (idNumbers < maxMoney)
+            {                
+                sw.WriteLine(stuff.data[idNumbers].id);
+                Console.WriteLine(stuff.data[idNumbers].id);
+                idNumbers++;                
+            }
+            sw.Close();
+
         }
 
         private void chart1_Click(object sender, EventArgs e)
@@ -45,9 +59,6 @@ namespace ChangeRates
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
+          
     }
 }
